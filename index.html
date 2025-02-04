@@ -52,14 +52,16 @@
     </style>
 </head>
 <body>
-    <div class="letter">V</div>
-    <div class="heart">❤️</div>
+    <div class="letter" id="letter">V</div>
+    <div class="heart" id="heart">❤️</div>
     <div class="message" id="message">Happy Valentine's Day</div>
 
     <script>
         let messageTimeout = null;
         const messages = ["Happy Valentine's Day", "Chúc người tui thương có một ngày Valentine thật hạnh phúc💖"];
         const messageElement = document.getElementById("message");
+        const letterElement = document.getElementById("letter");
+        const heartElement = document.getElementById("heart");
 
         function showMessages() {
             messageElement.style.opacity = 1;
@@ -78,16 +80,17 @@
             const K_position = localStorage.getItem("K_position");
             if (K_position) {
                 const distance = window.screenLeft - parseInt(K_position);
+
                 if (Math.abs(distance) < 150) {
                     document.body.style.backgroundColor = "#ffccd5";
-                    document.querySelector(".letter").style.display = "none";
-                    document.querySelector(".heart").style.display = "block";
+                    letterElement.style.display = "none";
+                    heartElement.style.display = "block";
 
                     if (!messageTimeout) showMessages();
                 } else {
                     document.body.style.backgroundColor = "#ffe6f2";
-                    document.querySelector(".letter").style.display = "block";
-                    document.querySelector(".heart").style.display = "none";
+                    letterElement.style.display = "block";  // Chữ "V" hiện lại nếu cửa sổ xa nhau
+                    heartElement.style.display = "none";
                     clearTimeout(messageTimeout);
                     messageTimeout = null;
                     messageElement.style.opacity = 0;
