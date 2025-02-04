@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viên</title>
+    <title>Khoa</title>
     <style>
         body {
             display: flex;
@@ -41,7 +41,16 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.2); }
         }
-
+        .floating-heart {
+            position: absolute;
+            color: rgba(255, 77, 121, 0.7);
+            font-size: 30px;
+            animation: floatUp 5s infinite;
+        }
+        @keyframes floatUp {
+            from { transform: translateY(100vh) scale(0.5); opacity: 1; }
+            to { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
         .message {
             font-size: 30px;
             font-weight: bold;
@@ -52,7 +61,7 @@
     </style>
 </head>
 <body>
-    <div class="letter" id="letter">V</div>
+    <div class="letter" id="letter">K</div>
     <div class="heart" id="heart">❤️</div>
     <div class="message" id="message">Happy Valentine's Day</div>
 
@@ -73,7 +82,7 @@
                     messageElement.innerText = messages[1];
                     messageElement.style.opacity = 1;
                 }, 1000);
-            }, 3000);
+            }, 5000);
         }
 
         function checkProximity() {
@@ -89,8 +98,8 @@
                     if (!messageTimeout) showMessages();
                 } else {
                     document.body.style.backgroundColor = "#ffe6f2";
-                    letterElement.style.display = "block";  // Chữ "V" hiện lại nếu cửa sổ xa nhau
-                    heartElement.style.display = "none";
+                    document.querySelector(".letter").style.display = "block";
+                    document.querySelector(".heart").style.display = "none";
                     clearTimeout(messageTimeout);
                     messageTimeout = null;
                     messageElement.style.opacity = 0;
