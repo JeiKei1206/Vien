@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vien</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffe6f2;
+            overflow: hidden;
+            position: relative;
+            transition: background-color 0.5s;
+        }
+
+        .letter {
+            font-size: 200px;
+            font-weight: bold;
+            color: #ff4d79;
+            text-shadow: 0px 0px 20px rgba(255, 77, 121, 0.8);
+            animation: glow 1.5s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0px 0px 10px rgba(255, 77, 121, 0.8); }
+            to { text-shadow: 0px 0px 30px rgba(255, 0, 102, 1); }
+        }
+
+        .heart {
+            font-size: 200px;
+            display: none;
+            animation: heartbeat 1s infinite, glow 1.5s infinite alternate;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .message {
+            font-size: 30px;
+            font-weight: bold;
+            color: #ff0055;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+
+        /* Trái tim bay nền */
+        .floating-heart {
+            position: absolute;
+            color: rgba(255, 77, 121, 0.7);
+            font-size: 30px;
+            animation: floatUp 5s infinite;
+        }
+
+        @keyframes floatUp {
+            from { transform: translateY(100vh) scale(0.5); opacity: 1; }
+            to { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="letter">V</div>
+    <div class="heart">❤️</div>
+    <div class="message" id="message">abc</div>
+
+    <script>
+        let messageTimeout = null;
+        const messages = ["abc", "def"];
+        const messageElement = document.getElementById("message");
+
+        // ⏳ Chỉnh thời gian hiển thị chữ ở đây
+        const abc_duration = 5000; // Thời gian "abc" hiển thị (ms)
+        const transition_duration = 1000; // Thời gian chuyển đổi giữa abc và def (ms)
+
+        function showMessages() {
+            messageElement.style.opacity = 1;
+            messageElement.innerText = messages[0]; // Hiện chữ "abc"
+
+            messageTimeout = setTimeout(() => {
+                messageElement.style.opacity = 0;
+                setTimeout(() => {
+                    messageElement.innerText = messages[1]; // Chuyển sang "def"
+                    messageElement.style.opacity = 1;
+                }, transition_duration);
+            }, abc_duration);
+        }
+
+        function checkProximity() {
+            const V_position = localStorage.getItem("L_position");
+            if (V_position) {
+                const distance = window.screenLeft - parseInt(L_position);
+                if (Math.abs(distance) < 150) {
+                    document.body.style.backgroundColor = "#ffccd5";
+                    document.querySelector(".letter").style.display = "none";
+                    document.querySelector(".heart").style.display = "block";
+
+                    if (!messageTimeout) showMessages(); // Chỉ chạy một lần
+                } else {
+                    document.body.style.backgroundColor = "#ffe6f2";
+                    document.querySelector(".letter").style.display = "block";
+                    document.querySelector(".heart").style.display = "none";
+                    clearTimeout(messageTimeout);
+                    messageTimeout = null;
+                    messageElement.style.opacity = 0;
+                }
+            }
+            localStorage.setItem("V_position", window.screenLeft);
+        }
+
+        function createFloatingHeart() {
+            const heart = document.createElement("div");
+            heart.innerHTML = "❤️";
+            heart.classList.add("floating-heart");
+            heart.style.left = `${Math.random() * 100}vw`;
+            heart.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+
+        setInterval(createFloatingHeart, 1000); // Tạo trái tim bay mỗi giây
+        window.onload = checkProximity;
+        window.onmousemove = checkProximity;
+        setInterval(checkProximity, 100);
+    </script>
+</body>
+</html>
