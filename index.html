@@ -92,8 +92,8 @@
         }
 
         function checkProximity() {
-            const V_position = localStorage.getItem("L_position");
-            if (V_position) {
+            const K_position = localStorage.getItem("K_position");
+            if (K_position) {
                 const distance = window.screenLeft - parseInt(L_position);
                 if (Math.abs(distance) < 150) {
                     document.body.style.backgroundColor = "#ffccd5";
