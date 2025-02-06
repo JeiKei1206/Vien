@@ -86,16 +86,90 @@
         function showMessages() {
             isMessagePlaying = true;
             messageElement.style.opacity = 1;
-            messageElement.innerText = messages[0];
+            messageElement.innerHTML = `Happy Valentine's Day 💖`;
 
             messageTimeout = setTimeout(() => {
                 messageElement.style.opacity = 0;
                 setTimeout(() => {
-                    messageElement.innerText = messages[1];
+                    messageElement.innerHTML = `Chúc <span id="specialWord" style="display: inline-block; font-size: 24px; transition: transform 0.3s ease;">người tui thương</span> có một ngày Valentine thật hạnh phúc 💖`;
                     messageElement.style.opacity = 1;
+
+                    const specialWord = document.getElementById("specialWord");
+                    specialWord.addEventListener("mouseenter", () => {
+                        specialWord.style.transform = "scale(0.5)"; // Phóng to nhẹ
+                        specialWord.style.fontWeight = "bold";
+                    });
+
+                    specialWord.addEventListener("mouseleave", () => {
+                        specialWord.style.transform = "scale(1)"; // Quay lại kích thước ban đầu
+                        specialWord.style.fontWeight = "normal";
+                    });
+
+                    // Thêm sự kiện bấm vào để hiển thị hình
+                    specialWord.addEventListener("click", showImage);
                 }, 1000);
             }, 5000);
         }
+        
+        
+        function showImage() {
+            const imgSrc = "/Html/Images/Vien.png"; // Đảm bảo ảnh nằm cùng thư mục với V.html
+
+            fetch(imgSrc)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Ảnh không tồn tại hoặc đường dẫn sai!");
+                    }
+
+                    // Tạo overlay mờ nền
+                    const imgOverlay = document.createElement("div");
+                    imgOverlay.style.position = "fixed";
+                    imgOverlay.style.top = "0";
+                    imgOverlay.style.left = "0";
+                    imgOverlay.style.width = "100vw";
+                    imgOverlay.style.height = "100vh";
+                    imgOverlay.style.background = "rgba(0, 0, 0, 0.8)";
+                    imgOverlay.style.display = "flex";
+                    imgOverlay.style.justifyContent = "center";
+                    imgOverlay.style.alignItems = "center";
+                    imgOverlay.style.zIndex = "1000";
+                    imgOverlay.style.opacity = "0"; // Bắt đầu với opacity 0
+                    imgOverlay.style.transition = "opacity 0.5s ease-in-out"; // Hiệu ứng hiện từ từ
+
+                    const img = document.createElement("img");
+                    img.src = imgSrc;
+                    img.style.maxWidth = "90%";
+                    img.style.maxHeight = "90%";
+                    img.style.borderRadius = "10px";
+                    img.style.boxShadow = "0 0 15px rgba(255, 255, 255, 0.7)";
+                    img.style.opacity = "0"; // Ẩn ảnh ban đầu
+                    img.style.transition = "opacity 0.5s ease-in-out"; // Hiệu ứng hiện từ từ
+
+                    imgOverlay.appendChild(img);
+                    document.body.appendChild(imgOverlay);
+
+                    // Hiển thị overlay và ảnh với hiệu ứng fade-in
+                    setTimeout(() => {
+                        imgOverlay.style.opacity = "1";
+                        img.style.opacity = "1";
+                    }, 10);
+
+                    // Bấm ra ngoài để đóng ảnh với hiệu ứng fade-out
+                    imgOverlay.addEventListener("click", () => {
+                        imgOverlay.style.opacity = "0";
+                        img.style.opacity = "0";
+                        setTimeout(() => {
+                            imgOverlay.remove();
+                        }, 500); // Chờ hiệu ứng biến mất trước khi xoá
+                    });
+                })
+                .catch(error => {
+                    console.error("Lỗi khi tải ảnh:", error);
+                    alert("Không tìm thấy ảnh! Hãy kiểm tra đường dẫn.");
+                });
+        }
+
+
 
         function checkProximity() {
             const vPos = window.screenX + window.outerWidth / 2;
